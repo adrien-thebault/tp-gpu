@@ -37,7 +37,6 @@ void ppm_read_metadata(const char* filename, int* width, int* height) {
   ifstream input(filename, ios::binary);
 
   string dump;
-  int i_dump;
 
   input >> dump;
   input >> *width;
