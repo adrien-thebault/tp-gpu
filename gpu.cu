@@ -1,5 +1,9 @@
 #include "ppm.h"
 
+#define INPUT_FILE "input.ppm"
+#define OUTPUT_GPU "output_gpu.ppm"
+#define BLUR_RADIUS 10
+
 __global__ void kernel(int* input, int* output, int width, int height, int size) {
 
     // We retrieve the index in the vector thanks to the block number
@@ -79,6 +83,9 @@ int main() {
   cout << "Writing file..." << endl;
   ppm_write(OUTPUT_GPU, output, width, height);
   cout << "GPU generated file written!" << endl;
+
+  free(input);
+  free(output);
 
   return 0;
 

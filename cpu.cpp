@@ -1,5 +1,9 @@
 #include "ppm.h"
 
+#define INPUT_FILE "input.ppm"
+#define OUTPUT_CPU "output_cpu.ppm"
+#define BLUR_RADIUS 10
+
 int main() {
 
   // The timer to get duration info
@@ -20,6 +24,8 @@ int main() {
 
   // Start clock
   start = clock();
+
+  // The tricky part (uniform blur)
   for(int y = 0; y < height; y++) {
     for(int x = 0; x < width; x++) {
       for(int j = 0; j < 3; j++) {
@@ -54,8 +60,8 @@ int main() {
   ppm_write(OUTPUT_CPU, output, width, height);
   cout << "CPU generated file written!" << endl;
 
-  delete[] input;
-  delete[] output;
+  free(input);
+  free(output);
 
   return 0;
 

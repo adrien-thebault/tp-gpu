@@ -3,11 +3,6 @@
 #include <fstream>
 #include <stdlib.h>
 
-#define INPUT_FILE "input.ppm"
-#define OUTPUT_CPU "output_cpu.ppm"
-#define OUTPUT_GPU "output_gpu.ppm"
-#define BLUR_RADIUS 10
-
 using namespace std;
 
 /** write pixels as ppm file */
