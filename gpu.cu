@@ -27,9 +27,6 @@ int main() {
   // Pointer to the vector of data in the GPU memory
   int* data_pt;
 
-  // CUDA Error code (debug)
-  cudaError_t code;
-
   // Image data
   int width, height;
   ppm_read_metadata(INPUT_FILE, &width, &height);
@@ -43,37 +40,16 @@ int main() {
   start = clock();
 
   cudaMalloc(&data_pt, 3*width*height*sizeof(int)); // Allocate memory in the GPU
-  if((code = cudaGetLastError()) != cudaSuccess) {
-    cout << "Erreur à la ligne " << __LINE__ << endl << cudaGetErrorString(code) << endl;
-    return -1;
-  }
-
   cudaMemcpy(data_pt, pixels, 3*width*height*sizeof(int), cudaMemcpyHostToDevice); // Copy original image data to GPU memory
-  if((code = cudaGetLastError()) != cudaSuccess) {
-    cout << "Erreur à la ligne " << __LINE__ << endl << cudaGetErrorString(code) << endl;
-    return -1;
-  }
 
   int block_size = 512;
   int num_blocks = (3*width*height + block_size - 1) / block_size;
   kernel<<<num_blocks, block_size>>>(data_pt, width, height);
 
   cudaMemcpy(pixels, data_pt, 3*width*height*sizeof(int), cudaMemcpyDeviceToHost); // Copy result image data to our vector
-  if((code = cudaGetLastError()) != cudaSuccess) {
-    cout << "Erreur à la ligne " << __LINE__ << endl << cudaGetErrorString(code) << endl;
-    return -1;
-  }
 
   cudaFree(data_pt); // Cleaning the GPU memory
-  if((code = cudaGetLastError()) != cudaSuccess) {
-    cout << "Erreur à la ligne " << __LINE__ << endl << cudaGetErrorString(code) << endl;
-    return -1;
-  }
   cudaDeviceSynchronize(); // Wait for GPU to finish before accessing on host
-  if((code = cudaGetLastError()) != cudaSuccess) {
-    cout << "Erreur à la ligne " << __LINE__ << endl << cudaGetErrorString(code) << endl;
-    return -1;
-  }
 
   duration = ( clock() - start ) / (double) CLOCKS_PER_SEC;
   cout << "Time to generate on GPU : " << duration << "s" << endl;
